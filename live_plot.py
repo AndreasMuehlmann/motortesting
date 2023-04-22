@@ -3,7 +3,7 @@ from matplotlib.animation import FuncAnimation
 import pandas as pd
 
 
-STEPS_SHOWN = 2000
+STEPS_SHOWN = 1000
 length_csv_file = 0
 
 plt.style.use('fivethirtyeight')
@@ -14,15 +14,15 @@ def animate(i):
     to_skip_rows = length_csv_file - STEPS_SHOWN if length_csv_file - STEPS_SHOWN >= 0 else 0
     data = pd.read_csv('data.csv', skiprows=lambda x: x < to_skip_rows and x != 0)
     length_csv_file = len(data['time'])
-    x = data['time'].iloc[-STEPS_SHOWN:]
-    y = data['rpm'].iloc[-STEPS_SHOWN:]
-    yf = data['filtered_rpm'].iloc[-STEPS_SHOWN:]
+    time = data['time'].iloc[-STEPS_SHOWN:]
+    rpm = data['rpm'].iloc[-STEPS_SHOWN:]
+    filtered_rpm = data['filtered_rpm'].iloc[-STEPS_SHOWN:]
+    voltage = data['voltage'].iloc[-STEPS_SHOWN:]
 
     plt.cla()
-    plt.plot(x, y, label='rpm', linewidth=2)
-    plt.plot(x, yf, label='filtered rpm', linewidth=2)
-    # plt.xlim([0, 1000])
-    # plt.ylim([0, 300])
+    plt.plot(time, rpm, label='rpm', linewidth=2)
+    plt.plot(time, filtered_rpm, label='filtered rpm', linewidth=2)
+    plt.plot(time, voltage, label='voltage * 10^-2', linewidth=2)
     plt.legend(loc='upper left')
     plt.tight_layout()
 

@@ -7,11 +7,14 @@ class Serial_Interface:
         self.ser = serial.Serial('/dev/ttyUSB0', 9600)
         time.sleep(2)
 
-    def recv_data(self):
+    def recv(self):
         return self.ser.readline().decode().strip()
 
     def send(self, data):
-        pass
-    
+        self.ser.write(str(data).encode() + b'\n')
+
+    def flush(self):
+        self.ser.flush()
+
     def reset(self):
         self.ser.close()

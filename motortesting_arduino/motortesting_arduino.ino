@@ -1,38 +1,48 @@
 int SENSORPIN = 3;
-int HOLES = 40;
-
+int OUTPUT_PIN = 5;
+int HOLES = 20;
 volatile unsigned long count, t2;
 unsigned long t1;
 double rpm;
+int voltage;
 
 void interrupt_handler() {
     count += 1;
-    t2 = millis();
+    t2 = micros();
+}
+
+double calc_rpm(unsigned long t1, volatile unsigned long t2, volatile unsigned long count) {
+    double T_in_micro_s = HOLES * (t2 - t1) / count;
+    return (unsigned) (long) (60000000 / T_in_micro_s);
 }
 
 void setup() {
     Serial.begin(9600);
-    count = 0;
-    t1 = 0;
-    t2 = 0;
-    rpm = 0;
+    count, t1, t2, rpm = 0;
     pinMode(SENSORPIN, INPUT);
-    attachInterrupt(digitalPinToInterrupt(SENSORPIN), interrupt_handler, FALLING);
+    attachInterrupt(digitalPinToInterrupt(SENSORPIN), interrupt_handler, RISING);
+    pinMode(OUTPUT_PIN, OUTPUT);
 }
 
 void loop() {
-    double T_in_micro_s;
     if (t2 > t1) {
-        T_in_micro_s = HOLES * (t2 - t1) / count;
-        rpm = (unsigned) (long) (60000 / T_in_micro_s);
+        calc_rpm(t1, t2, count);
         t1 = t2;
         count = 0;
     } else {
-        T_in_micro_s = HOLES * (millis() - t1);
-        double theoretical_rpm = (unsigned) (long) (60000 / T_in_micro_s);
-        if (theoretical_rpm < rpm) {
-          rpm = theoretical_rpm;
-        }
+          double theoretical_rpm = calc_rpm(t1, micros(), 1);
+          if (theoretical_rpm < rpm) {
+              rpm = theoretical_rpm;
+          }
     }
     Serial.println(rpm);
+    while(!Serial.available() > 0) {}
+    String incomingData = Serial.readStringUntil('\n');
+    if (!incomingData.equals("yes")) {
+        if (voltage != incomingData.toInt()) {
+            voltage = incomingData.toInt();
+            analogWrite(OUTPUT_PIN, voltage);
+        }
+    }
+    delay(5);
 }
