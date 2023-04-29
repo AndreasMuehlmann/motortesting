@@ -1,3 +1,4 @@
 #!/bin/bash
-python live_plot.py &
+source pyvenv/bin/activate
+python live_plot.py data.csv &
 python main.py 

@@ -1,10 +1,11 @@
-int SENSORPIN = 3;
+int SENSORPIN = 2;
 int OUTPUT_PIN = 5;
 int HOLES = 20;
 volatile unsigned long count, t2;
 unsigned long t1;
 double rpm;
 int voltage;
+int timeout_time_in_millis = 500;
 
 void interrupt_handler() {
     count += 1;
@@ -26,7 +27,7 @@ void setup() {
 
 void loop() {
     if (t2 > t1) {
-        calc_rpm(t1, t2, count);
+        rpm = calc_rpm(t1, t2, count);
         t1 = t2;
         count = 0;
     } else {
@@ -35,8 +36,17 @@ void loop() {
               rpm = theoretical_rpm;
           }
     }
-    Serial.println(rpm);
-    while(!Serial.available() > 0) {}
+    int read_voltage = analogRead(A0);
+    String to_send_string = String(rpm) + "," + String(read_voltage);
+    Serial.println(to_send_string);
+    
+    int start = millis();
+    while(!Serial.available() > 0) {
+      if (timeout_time_in_millis < millis() - start) {
+        analogWrite(OUTPUT_PIN, 0);
+        break;
+      }
+    }
     String incomingData = Serial.readStringUntil('\n');
     if (!incomingData.equals("yes")) {
         if (voltage != incomingData.toInt()) {
