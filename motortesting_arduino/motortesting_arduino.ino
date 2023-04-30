@@ -36,7 +36,7 @@ void loop() {
               rpm = theoretical_rpm;
           }
     }
-    int read_voltage = analogRead(A0);
+    int read_voltage = 0; //analogRead(A0);
     String to_send_string = String(rpm) + "," + String(read_voltage);
     Serial.println(to_send_string);
     

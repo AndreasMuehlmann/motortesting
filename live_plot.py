@@ -5,7 +5,7 @@ from matplotlib.animation import FuncAnimation
 import pandas as pd
 
 
-assert len(sys.argv) == 2, f'1 parameter, file name, needed ({len(sys.argv) - 1} parameters given)'
+assert len(sys.argv) == 3, f'2 parameters, file name and interval, needed ({len(sys.argv) - 1} parameters given)'
 
 STEPS_SHOWN = 500
 length_csv_file = 0
@@ -21,20 +21,18 @@ def animate(i):
 
     plt.cla()
 
-    x_axis_column = 'time'
-    length_csv_file = len(data['time'])
+    x_axis_column = data.columns[0]
+    length_csv_file = len(data[x_axis_column])
     data.iloc[-STEPS_SHOWN:]
-    for column in data.columns:
-        if column == x_axis_column:
-            continue
+    for column in data.columns[1:]:
         plt.plot(data[x_axis_column], data[column], label=column, linewidth=2)
-    if len(data[x_axis_column]) >= STEPS_SHOWN - 5:
-        plt.xlim([data[x_axis_column][len(data[x_axis_column]) - STEPS_SHOWN + 10],
-                  data[x_axis_column][len(data[x_axis_column]) - 1]])
+    #if len(data[x_axis_column]) >= STEPS_SHOWN - 5:
+    #    plt.xlim([data[x_axis_column][len(data[x_axis_column]) - STEPS_SHOWN + 10],
+    #              data[x_axis_column][len(data[x_axis_column]) - 1]])
     plt.legend(loc='upper left')
     plt.xlim
     plt.tight_layout()
 
 
-animation = FuncAnimation(plt.gcf(), animate, interval=20,  cache_frame_data=False)
+animation = FuncAnimation(plt.gcf(), animate, interval=sys.argv[2],  cache_frame_data=False)
 plt.show()
