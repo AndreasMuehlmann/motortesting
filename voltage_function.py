@@ -7,7 +7,7 @@ class Voltage_Function:
     def __init__(self):
         self.seconds_to_repetition = 8
         self.start_time = time.time()
-        self.max = 40
+        self.max = 200
         self.min = 20
         self.time_to_max = 0.5
         self.time_to_min = self.time_to_max

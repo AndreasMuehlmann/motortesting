@@ -9,12 +9,12 @@ from parameter_calculator import Parameter_Calculator
 
 class Motor_Testing:
     def __init__(self):
-        self.digital_filter = Iir_Filter(0.7, 5)
-        self.csv_writer = Csv_Writer('data.csv', ['time',
+        self.digital_filter = Iir_Filter(10**-50, 1)
+        self.csv_writer = Csv_Writer('data.csv', ['time_in_s',
                                                   'rpm',
                                                   'filtered_rpm',
-                                                  'measured_voltage*10^-3',
-                                                  'voltage*10^-3'])
+                                                  'measured_voltage_in_V*10^-3',
+                                                  'voltage_in_V*10^-3'])
         self.voltage_function = Voltage_Function()
         self.serial_interface = Serial_Interface()
         self.parameter_calculator = Parameter_Calculator()
@@ -32,14 +32,17 @@ class Motor_Testing:
                 self.time,
                 rpm,
                 filtered_rpm,
-                measured_voltage * 5000 / 1023,
+                measured_voltage * 5000000 / 1023,
                 voltage * 5000 / 255,
                 ])
-            self.parameter_calculator.calculate_parameters(rpm, self.voltage_function.mode)
-            time.sleep(0.005)
+            self.parameter_calculator.calculate_parameters(rpm, filtered_rpm, self.voltage_function.mode)
+            time.sleep(0.05)
 
     def reset(self):
         self.serial_interface.reset()
+        turn_off_serial_interface = Serial_Interface()
+        turn_off_serial_interface.send(0)
+        turn_off_serial_interface.reset()
 
 
 if __name__ == '__main__':

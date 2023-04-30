@@ -23,6 +23,7 @@ void setup() {
     pinMode(SENSORPIN, INPUT);
     attachInterrupt(digitalPinToInterrupt(SENSORPIN), interrupt_handler, RISING);
     pinMode(OUTPUT_PIN, OUTPUT);
+    voltage = 0;
 }
 
 void loop() {
@@ -39,20 +40,18 @@ void loop() {
     int read_voltage = 0; //analogRead(A0);
     String to_send_string = String(rpm) + "," + String(read_voltage);
     Serial.println(to_send_string);
-    
-    int start = millis();
+    //int start = millis();
     while(!Serial.available() > 0) {
-      if (timeout_time_in_millis < millis() - start) {
-        analogWrite(OUTPUT_PIN, 0);
-        break;
-      }
+      delay(5);
+      //if (timeout_time_in_millis < millis() - start) {
+      //  analogWrite(OUTPUT_PIN, 0);
+      //  break;
+      //}
     }
     String incomingData = Serial.readStringUntil('\n');
-    if (!incomingData.equals("yes")) {
-        if (voltage != incomingData.toInt()) {
-            voltage = incomingData.toInt();
-            analogWrite(OUTPUT_PIN, voltage);
-        }
+    if (voltage != incomingData.toInt()) {
+      voltage = incomingData.toInt();
+      analogWrite(OUTPUT_PIN, voltage);
     }
-    delay(5);
+    delay(50);
 }

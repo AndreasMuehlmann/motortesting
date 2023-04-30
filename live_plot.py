@@ -7,7 +7,7 @@ import pandas as pd
 
 assert len(sys.argv) == 3, f'2 parameters, file name and interval, needed ({len(sys.argv) - 1} parameters given)'
 
-STEPS_SHOWN = 500
+STEPS_SHOWN = 200
 length_csv_file = 0
 
 plt.style.use('fivethirtyeight')
@@ -26,9 +26,9 @@ def animate(i):
     data.iloc[-STEPS_SHOWN:]
     for column in data.columns[1:]:
         plt.plot(data[x_axis_column], data[column], label=column, linewidth=2)
-    #if len(data[x_axis_column]) >= STEPS_SHOWN - 5:
-    #    plt.xlim([data[x_axis_column][len(data[x_axis_column]) - STEPS_SHOWN + 10],
-    #              data[x_axis_column][len(data[x_axis_column]) - 1]])
+    if len(data[x_axis_column]) >= STEPS_SHOWN - 5:
+        plt.xlim([data[x_axis_column][len(data[x_axis_column]) - STEPS_SHOWN + 10],
+                  data[x_axis_column][len(data[x_axis_column]) - 1]])
     plt.legend(loc='upper left')
     plt.xlim
     plt.tight_layout()
