@@ -7,7 +7,7 @@ import pandas as pd
 
 assert len(sys.argv) == 3, f'2 parameters, file name and interval, needed ({len(sys.argv) - 1} parameters given)'
 
-STEPS_SHOWN = 200
+STEPS_SHOWN = 300
 length_csv_file = 0
 
 plt.style.use('fivethirtyeight')

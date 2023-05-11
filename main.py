@@ -1,41 +1,45 @@
 import traceback
 import time
+
+import config as conf
 from csv_writer import Csv_Writer
-from iir_filter import Iir_Filter
 from serial_interface import Serial_Interface
-from voltage_function import Voltage_Function
 from parameter_calculator import Parameter_Calculator
 
 
 class Motor_Testing:
     def __init__(self):
-        self.digital_filter = Iir_Filter(10**-50, 1)
         self.csv_writer = Csv_Writer('data.csv', ['time_in_s',
                                                   'rpm',
-                                                  'filtered_rpm',
-                                                  'measured_voltage_in_V*10^-3',
-                                                  'voltage_in_V*10^-3'])
-        self.voltage_function = Voltage_Function()
+                                                  'measured_voltage_in_V*10^3',
+                                                  'voltage_in_V*10^3'])
+        self.voltage_scheduler = conf.voltage_scheduler
         self.serial_interface = Serial_Interface()
         self.parameter_calculator = Parameter_Calculator()
         self.start_time = time.time()
         self.time = 0
+        self.iterations = 0
 
     def run(self):
         while True:
             rpm, measured_voltage = self.serial_interface.give_measurements()
-            voltage = self.voltage_function.give_current_voltage()
+            voltage = self.voltage_scheduler.give_current_voltage()
             self.serial_interface.send(voltage)
-            filtered_rpm = self.digital_filter.give_filtered(rpm)
             self.time = time.time() - self.start_time
             self.csv_writer.add_line_of_data([
                 self.time,
                 rpm,
-                filtered_rpm,
-                measured_voltage * 5000000 / 1023,
+                measured_voltage * 5000 / 1023,
                 voltage * 5000 / 255,
                 ])
-            self.parameter_calculator.calculate_parameters(rpm, filtered_rpm, self.voltage_function.mode)
+            if self.voltage_scheduler.was_reset:
+                self.voltage_scheduler.was_reset = False
+                self.parameter_calculator.reset()
+                self.iterations += 1
+            self.parameter_calculator.calculate_parameters(rpm)
+            if self.iterations >= conf.repetitions:
+                self.reset()
+                return
             time.sleep(0.05)
 
     def reset(self):

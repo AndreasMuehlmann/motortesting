@@ -1,5 +1,6 @@
 int SENSORPIN = 2;
 int OUTPUT_PIN = 5;
+int RILAIS_PIN = 10;
 int HOLES = 20;
 volatile unsigned long count, t2;
 unsigned long t1;
@@ -37,7 +38,7 @@ void loop() {
               rpm = theoretical_rpm;
           }
     }
-    int read_voltage = 0; //analogRead(A0);
+    int read_voltage = analogRead(A0);
     String to_send_string = String(rpm) + "," + String(read_voltage);
     Serial.println(to_send_string);
     //int start = millis();
@@ -49,6 +50,12 @@ void loop() {
       //}
     }
     String incomingData = Serial.readStringUntil('\n');
+    if (voltage < 255 / 5) {
+      digitalWrite(RILAIS_PIN, HIGH);
+      voltage = 0;
+    } else {
+      digitalWrite(RILAIS_PIN, LOW);
+    }
     if (voltage != incomingData.toInt()) {
       voltage = incomingData.toInt();
       analogWrite(OUTPUT_PIN, voltage);
