@@ -4,7 +4,11 @@ import time
 
 class Serial_Interface:
     def __init__(self):
-        self.ser = serial.Serial('/dev/ttyUSB0', 9600)
+        try:
+            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
+        except serial.serialutil.SerialException:
+            self.ser = serial.Serial('COM3', 9600)
+
         self.prev_measurements = [0, 0]
         time.sleep(1)
 
