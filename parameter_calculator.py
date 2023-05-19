@@ -22,8 +22,8 @@ class Parameter_Calculator:
         self.iterations += 1
         self.csv_writer.add_line_of_data([
             self.iterations,
-            self.max_rpm,
-            self.total_rotations
+            int(self.max_rpm),
+            int(self.total_rotations)
             ])
         self.max_rpm = 0
         self.total_rotations = 0
