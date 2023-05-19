@@ -8,7 +8,7 @@ class Csv_Writer:
         self._create_file_with_headers()
 
     def _create_file_with_headers(self):
-        with open(self.file_name, 'w') as csv_file:
+        with open(self.file_name, 'w', newline='') as csv_file:
             dict_writer = csv.DictWriter(csv_file, self.field_names,
                                          dialect='excel', quoting=csv.QUOTE_ALL)
             dict_writer.writeheader()
