@@ -6,20 +6,17 @@ class Csv_Writer:
         self.file_name = file_name
         self.field_names = field_names
         self._create_file_with_headers()
-        self.dialect = csv.Dialect()
-        self.dialect.delimiter = '\t'
-        self.dialect.quoting = csv.QUOTE_ALL
 
     def _create_file_with_headers(self):
         with open(self.file_name, 'w') as csv_file:
             dict_writer = csv.DictWriter(csv_file, self.field_names,
-                                         dialect=self.dialect)
+                                         dialect='excel', quoting=csv.QUOTE_ALL)
             dict_writer.writeheader()
 
     def add_line_of_data(self, data):
-        with open(self.file_name, 'a') as csv_file:
+        with open(self.file_name, 'a', newline='') as csv_file:
             dict_writer = csv.DictWriter(csv_file, self.field_names,
-                                         dialect=self.dialect)
+                                         dialect='excel', quoting=csv.QUOTE_ALL)
             data_dict = {key_value_pair[0]: key_value_pair[1]
                          for key_value_pair in zip(self.field_names, data)}
             dict_writer.writerow(data_dict)
