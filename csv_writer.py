@@ -9,7 +9,8 @@ class Csv_Writer:
 
     def _create_file_with_headers(self):
         with open(self.file_name, 'w') as csv_file:
-            dict_writer = csv.DictWriter(csv_file, self.field_names)
+            dict_writer = csv.DictWriter(csv_file, self.field_names,
+                                         dialect='excel-tab')
             dict_writer.writeheader()
 
     def add_line_of_data(self, data):
