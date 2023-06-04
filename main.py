@@ -27,10 +27,10 @@ class Motor_Testing:
             self.serial_interface.send(voltage)
             self.time = time.time() - self.start_time
             self.csv_writer.add_line_of_data([
-                self.time,
-                rpm,
-                measured_voltage * 5000 / 1023,
-                voltage * 5000 / 255,
+                round(self.time, 2),
+                round(rpm, 2),
+                round(measured_voltage * 5000 / 1023, 2),
+                round(voltage * 5000 / 255, 2),
                 ])
             if self.voltage_scheduler.was_reset:
                 self.voltage_scheduler.was_reset = False
