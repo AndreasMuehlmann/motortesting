@@ -1,6 +1,6 @@
 int SENSORPIN = 2;
 int OUTPUT_PIN = 5;
-int RILAIS_PIN = 10;
+int RILAIS_PIN = 9;
 int HOLES = 20;
 volatile unsigned long count, t2;
 unsigned long t1;
@@ -24,6 +24,7 @@ void setup() {
     pinMode(SENSORPIN, INPUT);
     attachInterrupt(digitalPinToInterrupt(SENSORPIN), interrupt_handler, RISING);
     pinMode(OUTPUT_PIN, OUTPUT);
+    pinMode(RILAIS_PIN, OUTPUT);
     voltage = 0;
 }
 
