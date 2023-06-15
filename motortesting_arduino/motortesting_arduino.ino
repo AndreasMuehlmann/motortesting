@@ -7,6 +7,8 @@ unsigned long t1;
 double rpm;
 int voltage;
 int timeout_time_in_millis = 500;
+int read_voltage;
+int read_current;
 
 void interrupt_handler() {
     count += 1;
@@ -39,8 +41,9 @@ void loop() {
               rpm = theoretical_rpm;
           }
     }
-    int read_voltage = analogRead(A0);
-    String to_send_string = String(rpm) + "," + String(read_voltage);
+    read_voltage = analogRead(A0);
+    read_current = analogRead(A1);
+    String to_send_string = String(rpm) + "," + String(read_voltage) + "," + String(read_current);
     Serial.println(to_send_string);
     //int start = millis();
     while(!Serial.available() > 0) {

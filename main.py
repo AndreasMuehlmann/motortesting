@@ -12,7 +12,8 @@ class Motor_Testing:
         self.csv_writer = Csv_Writer('data.csv', ['time_in_s',
                                                   'rpm',
                                                   'measured_voltage_in_V*10^3',
-                                                  'voltage_in_V*10^3'])
+                                                  'voltage_in_V*10^3',
+                                                  'current_in_A*10^4'])
         self.voltage_scheduler = conf.voltage_scheduler
         self.serial_interface = Serial_Interface()
         self.parameter_calculator = Parameter_Calculator()
@@ -22,7 +23,7 @@ class Motor_Testing:
 
     def run(self):
         while True:
-            rpm, measured_voltage = self.serial_interface.give_measurements()
+            rpm, measured_voltage, measured_amps = self.serial_interface.give_measurements()
             voltage = self.voltage_scheduler.give_current_voltage()
             self.serial_interface.send(voltage)
             self.time = time.time() - self.start_time
@@ -31,6 +32,7 @@ class Motor_Testing:
                 round(rpm, 2),
                 round(measured_voltage * 5000 / 1023, 2),
                 round(voltage * 5000 / 255, 2),
+                round(measured_amps * 50000 / 1023, 2),
                 ])
             if self.voltage_scheduler.was_reset:
                 self.voltage_scheduler.was_reset = False
