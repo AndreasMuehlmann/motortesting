@@ -29,10 +29,10 @@ class Motor_Testing:
             self.time = time.time() - self.start_time
             self.csv_writer.add_line_of_data([
                 round(self.time, 2),
-                round(rpm, 2),
-                round(measured_voltage * 5000 / 1023, 2),
-                round(voltage * 5000 / 255, 2),
-                round(measured_amps * 50000 / 1023, 2),
+                int(rpm),
+                int(measured_voltage * 5000 / 1023),
+                int(voltage * 5000 / 255),
+                int(measured_amps * 50000 / 1023),
                 ])
             if self.voltage_scheduler.was_reset:
                 self.voltage_scheduler.was_reset = False
