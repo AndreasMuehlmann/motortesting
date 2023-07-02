@@ -1,5 +1,5 @@
 int SENSORPIN = 2;
-int OUTPUT_PIN = 7;
+int OUTPUT_PIN = 5;
 int RILAIS_PIN = 9;
 int HOLES = 20;
 volatile unsigned long count, t2;

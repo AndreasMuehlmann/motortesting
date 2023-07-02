@@ -13,9 +13,13 @@ csv_scheduler_path = os.path.join(path_to_measurements, "voltage_schedule.csv")
 def function(x):
     return 50 * (-math.cos(x) + 1.5)
 
+def calibration_function(x):
+    return 128
 
-repetitions = 5
-period_duration_in_s = 15
-# voltage_scheduler = Trapezoid_Function_Scheduler(20, 200, 0.5, 0.5)
-voltage_scheduler = Csv_Scheduler(csv_scheduler_path)
+
+repetitions = 15
+period_duration_in_s = 5
+voltage_scheduler = Trapezoid_Function_Scheduler(45, 128, 0.5, 0.5)
+# voltage_scheduler = Csv_Scheduler(csv_scheduler_path)
 # voltage_scheduler = Custom_Function_Scheduler(function)
+# voltage_scheduler = Custom_Function_Scheduler(calibration_function)
