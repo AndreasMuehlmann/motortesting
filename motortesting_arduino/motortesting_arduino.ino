@@ -54,7 +54,7 @@ void loop() {
       //}
     }
     String incomingData = Serial.readStringUntil('\n');
-    if (voltage < 255 / 5) {
+    if (voltage < 255 / 6) {
       digitalWrite(RILAIS_PIN, HIGH);
       voltage = 0;
     } else {
