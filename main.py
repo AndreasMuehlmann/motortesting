@@ -5,6 +5,7 @@ import config as conf
 from csv_writer import Csv_Writer
 from serial_interface import Serial_Interface
 from parameter_calculator import Parameter_Calculator
+from csv_to_excel import csv_to_excel
 
 
 class Motor_Testing:
@@ -49,6 +50,8 @@ class Motor_Testing:
         turn_off_serial_interface = Serial_Interface()
         turn_off_serial_interface.send(0)
         turn_off_serial_interface.reset()
+        csv_to_excel('data.csv', 'data.xlsx')
+        csv_to_excel('parameters.csv', 'parameters.xlsx')
 
 
 if __name__ == '__main__':
