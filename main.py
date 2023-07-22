@@ -1,5 +1,7 @@
 import traceback
 import time
+from datetime import datetime, timedelta, timezone
+import os
 
 import config as conf
 from csv_writer import Csv_Writer
@@ -50,8 +52,10 @@ class Motor_Testing:
         turn_off_serial_interface = Serial_Interface()
         turn_off_serial_interface.send(0)
         turn_off_serial_interface.reset()
-        csv_to_excel('data.csv', 'data.xlsx')
-        csv_to_excel('parameters.csv', 'parameters.xlsx')
+        german_datetime = datetime.now()
+        time_string = german_datetime.strftime("%Y%m%d-%H%M%S")
+        csv_to_excel('data.csv', os.path.join('test_data', f'data{time_string}.xlsx'))
+        csv_to_excel('parameters.csv', os.path.join('test_data', f'parameters{time_string}.xlsx'))
 
 
 if __name__ == '__main__':
