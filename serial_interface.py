@@ -9,7 +9,7 @@ class Serial_Interface:
         except serial.serialutil.SerialException:
             self.ser = serial.Serial('COM3', 9600)
 
-        self.prev_measurements = [0, 0]
+        self.prev_measurements = [0, 0, 0]
         time.sleep(1)
 
     def give_measurements(self):
