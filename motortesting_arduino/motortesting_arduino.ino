@@ -47,22 +47,20 @@ void loop() {
     Serial.println(to_send_string);
     //int start = millis();
     while(!Serial.available() > 0) {
-      delay(5);
-      //if (timeout_time_in_millis < millis() - start) {
-      //  analogWrite(OUTPUT_PIN, 0);
-      //  break;
-      //}
+        delay(5);
+        //if (timeout_time_in_millis < millis() - start) {
+        //  analogWrite(OUTPUT_PIN, 0);
+        //  break;
+        //}
     }
     String incomingData = Serial.readStringUntil('\n');
+    voltage = incomingData.toInt();
     if (voltage < 255 / 6) {
-      digitalWrite(RILAIS_PIN, HIGH);
-      voltage = 0;
+        digitalWrite(RILAIS_PIN, HIGH);
+        analogWrite(OUTPUT_PIN, 0);
     } else {
-      digitalWrite(RILAIS_PIN, LOW);
-    }
-    if (voltage != incomingData.toInt()) {
-      voltage = incomingData.toInt();
-      analogWrite(OUTPUT_PIN, voltage);
+        digitalWrite(RILAIS_PIN, LOW);
+        analogWrite(OUTPUT_PIN, voltage);
     }
     delay(50);
 }
