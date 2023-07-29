@@ -1,3 +1,8 @@
+#include <Wire.h>
+#include <Adafruit_MCP4725.h>
+
+Adafruit_MCP4725 dac;
+
 int SENSORPIN = 2;
 int OUTPUT_PIN = 5;
 int RILAIS_PIN = 9;
@@ -22,6 +27,7 @@ double calc_rpm(unsigned long t1, volatile unsigned long t2, volatile unsigned l
 
 void setup() {
     Serial.begin(9600);
+    dac.begin(0x62);
     count, t1, t2, rpm = 0;
     pinMode(SENSORPIN, INPUT);
     attachInterrupt(digitalPinToInterrupt(SENSORPIN), interrupt_handler, RISING);
@@ -57,10 +63,10 @@ void loop() {
     voltage = incomingData.toInt();
     if (voltage < 255 / 6) {
         digitalWrite(RILAIS_PIN, HIGH);
-        analogWrite(OUTPUT_PIN, 0);
+        dac.setVoltage(0, false);
     } else {
         digitalWrite(RILAIS_PIN, LOW);
-        analogWrite(OUTPUT_PIN, voltage);
+        dac.setVoltage(voltage / 255 * 4095, false);
     }
     delay(50);
 }
