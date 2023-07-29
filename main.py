@@ -50,7 +50,9 @@ class Motor_Testing:
     def reset(self):
         self.serial_interface.reset()
         turn_off_serial_interface = Serial_Interface()
-        turn_off_serial_interface.send(0)
+        for i in range(10):
+            turn_off_serial_interface.send(0)
+            time.sleep(0.01)
         turn_off_serial_interface.reset()
         german_datetime = datetime.now()
         time_string = german_datetime.strftime("%Y%m%d-%H%M%S")
