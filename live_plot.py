@@ -15,22 +15,24 @@ plt.tight_layout()
 
 
 def animate(i):
-    global length_csv_file
+    global length_csv_file, animation
     to_skip_rows = length_csv_file - STEPS_SHOWN if length_csv_file - STEPS_SHOWN >= 0 else 0
     data = pd.read_csv(sys.argv[1], skiprows=lambda x: x < to_skip_rows and x != 0)
 
-    plt.cla()
-
     x_axis_column = data.columns[0]
+    if len(data[x_axis_column]) > 0 and data[x_axis_column][len(data[x_axis_column]) - 1] == 'end':
+        animation.event_source.stop()
+        return
+
     length_csv_file = len(data[x_axis_column])
     data.iloc[-STEPS_SHOWN:]
+    plt.cla()
     for column in data.columns[1:]:
         plt.plot(data[x_axis_column], data[column], label=column, linewidth=2)
     if len(data[x_axis_column]) >= STEPS_SHOWN - 5:
         plt.xlim([data[x_axis_column][len(data[x_axis_column]) - STEPS_SHOWN + 10],
                   data[x_axis_column][len(data[x_axis_column]) - 1]])
     plt.legend(loc='upper left')
-    plt.xlim
     plt.tight_layout()
 
 

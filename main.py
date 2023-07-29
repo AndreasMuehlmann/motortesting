@@ -1,13 +1,21 @@
 import traceback
 import time
-from datetime import datetime, timedelta, timezone
 import os
+from datetime import datetime
 
 import config as conf
 from csv_writer import Csv_Writer
 from serial_interface import Serial_Interface
 from parameter_calculator import Parameter_Calculator
 from csv_to_excel import csv_to_excel
+
+
+#TODO: voltage up when certain rpm is met
+
+
+def append_end(file_name):
+    with open(file_name, 'a') as file:
+        file.write('end')
 
 
 class Motor_Testing:
@@ -58,6 +66,8 @@ class Motor_Testing:
         time_string = german_datetime.strftime("%Y%m%d-%H%M%S")
         csv_to_excel('data.csv', os.path.join('test_data', f'data{time_string}.xlsx'))
         csv_to_excel('parameters.csv', os.path.join('test_data', f'parameters{time_string}.xlsx'))
+        append_end('data.csv')
+        append_end('parameters.csv')
 
 
 if __name__ == '__main__':
