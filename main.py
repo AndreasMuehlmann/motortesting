@@ -35,7 +35,7 @@ class Motor_Testing:
     def run(self):
         while True:
             rpm, measured_voltage, measured_amps = self.serial_interface.give_measurements()
-            voltage = self.voltage_scheduler.give_current_voltage()
+            voltage = round(self.voltage_scheduler.give_current_voltage())
             self.serial_interface.send(voltage)
             self.time = time.time() - self.start_time
             self.csv_writer.add_line_of_data([

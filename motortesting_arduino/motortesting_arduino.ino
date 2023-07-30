@@ -13,6 +13,7 @@ int voltage;
 int timeout_time_in_millis = 500;
 int read_voltage;
 int read_current;
+unsigned long start;
 
 void interrupt_handler() {
     count += 1;
@@ -47,15 +48,14 @@ void loop() {
     }
     read_voltage = analogRead(A0);
     read_current = analogRead(A1);
-    String to_send_string = String(rpm) + "," + String(read_voltage) + "," + String(read_current);
+    String to_send_string = String(round(rpm)) + "," + String(round(read_voltage)) + "," + String(round(read_current));
     Serial.println(to_send_string);
-    int start = millis();
+    start = millis();
     while(!Serial.available() > 0) {
         if (millis() - start > 100) {
             dac.setVoltage(0, false);
             digitalWrite(RILAIS_PIN, LOW);
         }
-        delay(5);
     }
     String incomingData = Serial.readStringUntil('\n');
     voltage = incomingData.toInt();
@@ -66,5 +66,4 @@ void loop() {
         digitalWrite(RILAIS_PIN, LOW);
         dac.setVoltage((int) (voltage * 16), false);
     }
-    delay(50);
 }
