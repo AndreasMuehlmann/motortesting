@@ -53,7 +53,6 @@ class Motor_Testing:
             if self.iterations >= conf.repetitions:
                 self.reset()
                 return
-            time.sleep(0.05)
 
     def reset(self):
         self.serial_interface.reset()
